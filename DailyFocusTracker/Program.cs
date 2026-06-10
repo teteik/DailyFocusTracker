@@ -20,7 +20,7 @@ public class Program
                 MaxStreak = 0,
                 SessionCount = 0,
                 TotalMinutes = 0,
-                SessionLastTime = DateTime.MinValue
+                LastSessionDate = DateTime.MinValue
             };
             Console.WriteLine($"Hello {userProfile.Username}! New profile created.");
         }
