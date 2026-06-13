@@ -3,17 +3,18 @@ namespace DailyFocusTracker;
 public record UserProfile
 {
     public required string Username { get; init; }
-    public int Streak { get; set; }
-    public int MaxStreak { get; set; }
-    public int SessionCount {  get; set; }
+    public int Streak { get; init; }
+    public int MaxStreak { get; init; }
+    public int SessionCount {  get; init; }
     public int TotalMinutes { get; init; }
-    public DateTime LastSessionDate { get; set; }
+    public int TodayTotalMinutes { get; init; }
+    public DateTime LastSessionDate { get; init; }
 
     
     public UserProfile AddSession(int minutes)
     {
         if (minutes <= 0)
-                throw new ArgumentException("Время сессии должно быть больше нуля.", nameof(minutes));
+                throw new ArgumentException("Session duration must be greater than 0.", nameof(minutes));
 
         DateTime today = DateTime.Today;
         DateTime sessionDate = this.LastSessionDate.Date; 
@@ -27,12 +28,19 @@ public record UserProfile
             _ => 1                     
         };
 
+        int todayMinutes = minutes;
+        if (newStreak == this.Streak)
+        {
+            todayMinutes += this.TodayTotalMinutes;
+        }
+
         return this with 
         {
             TotalMinutes = this.TotalMinutes + minutes,
             SessionCount = this.SessionCount + 1,
             Streak = newStreak,
-            LastSessionDate = sessionDate,
+            LastSessionDate = today,
+            TodayTotalMinutes = todayMinutes,
             MaxStreak = Math.Max(this.MaxStreak, newStreak)
         };
     }
